@@ -31,6 +31,10 @@ const envVarsSchema = joi.object({
     .required(),
   JWT_EXPIRES_IN: joi.string()
     .required(),
+  SUPBASE_URL: joi.string()
+    .required(),
+  SUPBASE_KEY: joi.string()
+    .required(),
 }).unknown()
   .required();
 
@@ -51,4 +55,6 @@ export const env = {
   USER_PASSWORD: envVars.USER_PASSWORD,
   JWT_SECRET: envVars.JWT_SECRET,
   JWT_EXPIRES_IN: envVars.JWT_EXPIRES_IN,
+  SUPBASE_URL: envVars.SUPBASE_URL,
+  SUPABASE_KEY: envVars.SUPBASE_KEY,
 };
