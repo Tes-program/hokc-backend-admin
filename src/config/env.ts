@@ -46,7 +46,7 @@ const { error, value: envVars } = envVarsSchema.validate(process.env);
 
 if ( error ) {
     logger.error(`Config validation error: ${error.message}`);
-    // process.exit(1);
+    process.exit(1);
 }
 
 export const env = {
