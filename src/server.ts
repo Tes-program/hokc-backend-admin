@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import { env } from './config/env';
 import { Logger } from './shared/logger';
-import { router } from './shared/router';
+// import { router } from './shared/router';
 
 const app = express();
 const logger =  new Logger();
@@ -18,7 +18,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/v1", router);
+// app.use("/api/v1", router);
 
 app.get('/', (_req, res) => {
     res.send('Hello World');

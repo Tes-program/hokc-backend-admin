@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon dist/index.js",
+    "watch": "tsc -p tsconfig.json -w",
     "build": "tsc",
-    "knex:create": "knex migrate:make --knexfile ./knexfile.ts $1",
-    "knex:migrate": "knex migrate:latest --knexfile ./knexfile.ts",
-    "knex:rollback": "knex migrate:rollback --knexfile ./knexfile.ts",
-    "knex:seed:create": "knex seed:make --knexfile ./knexfile.ts $1",
-    "knex:seed:run": "knex seed:run --knexfile ./knexfile.ts $1",
+    "knex:create": "knex migrate:make --knexfile ./src/database/knexfile.ts $1",
+    "knex:migrate": "knex migrate:latest --knexfile ./src/database/knexfile.ts",
+    "knex:rollback": "knex migrate:rollback --knexfile ./src/database/knexfile.ts",
+    "knex:seed:create": "knex seed:make --knexfile ./src/database/knexfile.ts $1",
+    "knex:seed:run": "knex seed:run --knexfile ./src/database/knexfile.ts $1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,7 +29,6 @@
     "joi": "^17.12.1",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
-    "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.3",
     "pg": "^8.11.3",
@@ -44,6 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.56.0",
+    "moment": "^2.30.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

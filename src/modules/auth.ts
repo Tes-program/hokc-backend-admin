@@ -4,6 +4,7 @@ import { TokenModel } from "../models/token.model";
 import { TokenEnum } from "../utils/enum/token";
 import { env } from "../config/env";
 import { NotFoundError } from "../shared/error";
+import { CreateUserDto } from "src/api/auth/dto/create-users.dto";
 
 export const generateToken = (
   userId: string,
@@ -49,21 +50,21 @@ export const verifyToken = async (
   return verifyToken;
 };
 
-export const generateAuthToken = async (userId: string) => {
+export const generateAuthToken = async (user : CreateUserDto) => {
   const accessTokenExpires = moment()
     .add(env.JWT_ACCESS_EXPIRATION_MINUTES, "minutes")
     .toDate();
-  const accessToken = generateToken(userId, accessTokenExpires, TokenEnum.ACCESS);
+  const accessToken = generateToken(user.id, accessTokenExpires, TokenEnum.ACCESS);
   const refreshTokenExpires = moment()
     .add(env.JWT_REFRESH_EXPIRATION_DAYS, "days")
     .toDate();
   const refreshToken = generateToken(
-    userId,
+    user.id,
     refreshTokenExpires,
     TokenEnum.REFRESH
   );
 
-  await saveToken(userId, refreshToken, refreshTokenExpires, TokenEnum.REFRESH);
+  await saveToken(user.id, refreshToken, refreshTokenExpires, TokenEnum.REFRESH);
 
   return {
     access: {

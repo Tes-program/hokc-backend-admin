@@ -1,7 +1,8 @@
-import { PartialInstantiable } from "src/utils/classes/partial-instantiable";
+// import { PartialInstantiable } from "src/utils/classes/partial-instantiable";
 
-export class CreateUserDto extends PartialInstantiable<CreateUserDto>{
-    email!: string;
-    password!: string;
-    phone_number!: string;
+export interface CreateUserDto{
+    id: string;
+    email: string;
+    password: string;
+    phone_number: string;
 }
