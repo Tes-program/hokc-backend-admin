@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "src/utils/enum/httpCode";
+import { HttpStatusCode } from "../utils/enum/httpCode";
 
 export class BaseError extends Error {
     public readonly name: string;

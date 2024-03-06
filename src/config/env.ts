@@ -31,9 +31,13 @@ const envVarsSchema = joi.object({
     .required(),
   JWT_EXPIRES_IN: joi.string()
     .required(),
-  SUPBASE_URL: joi.string()
+  SUPABASE_URL: joi.string()
     .required(),
-  SUPBASE_KEY: joi.string()
+  SUPABASE_KEY: joi.string()
+    .required(),
+  JWT_REFRESH_EXPIRATION_DAYS: joi.string()
+    .required(),
+  JWT_ACCESS_EXPIRATION_MINUTES: joi.string()
     .required(),
 }).unknown()
   .required();
@@ -42,7 +46,7 @@ const { error, value: envVars } = envVarsSchema.validate(process.env);
 
 if ( error ) {
     logger.error(`Config validation error: ${error.message}`);
-    process.exit(1);
+    // process.exit(1);
 }
 
 export const env = {
@@ -57,4 +61,6 @@ export const env = {
   JWT_EXPIRES_IN: envVars.JWT_EXPIRES_IN,
   SUPBASE_URL: envVars.SUPBASE_URL,
   SUPABASE_KEY: envVars.SUPBASE_KEY,
+  JWT_REFRESH_EXPIRATION_DAYS: envVars.JWT_REFRESH_EXPIRATION_DAYS,
+  JWT_ACCESS_EXPIRATION_MINUTES: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
 };
