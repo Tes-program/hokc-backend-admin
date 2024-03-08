@@ -5,11 +5,12 @@ import { Request, Response, NextFunction } from 'express';
 import { NotFoundError } from '../shared/error';
 
 export function validateBody(schema: Joi.Schema): (req: Request, res: Response, next: NextFunction) => void {
-  return (req: Request, _res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     try {
       const { error } = schema.validate(req.body);
 
       if (error) {
+        res.json({ validationError: error.details[0].message });
         throw new NotFoundError(error.details[0].message);
       }
 
