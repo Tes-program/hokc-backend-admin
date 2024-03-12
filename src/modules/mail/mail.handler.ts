@@ -4,6 +4,7 @@ import { Resend } from 'resend';
 import { Logger } from '../../shared/logger'
 import { Mail } from './mail.interface';
 import { env } from '../../config/env';
+import { MailError } from '../../shared/error';
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -35,7 +36,7 @@ private static compileTemplate(template: string, data: Record<string, string | n
       });
     } catch (error) {
       MailHandler.logger.error(`Failed to send mail: ${error}`);
-      throw new Error(error)
+      throw new MailError(error)
     }
   }
 }

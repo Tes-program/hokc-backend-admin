@@ -65,4 +65,10 @@ export class RateLimitError extends APIError {
     }
 }
 
+export class MailError extends APIError {
+    constructor(description: string) {
+        super('MailError', HttpStatusCode.INTERNAL_SERVER_ERROR, description, true);
+    }
+}
+
 
