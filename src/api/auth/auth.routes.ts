@@ -10,5 +10,6 @@ authRoute.post("/register", validateBody(createUserSchema), authController.creat
 authRoute.post("/login", validateBody(loginUserSchema), authController.login);
 authRoute.post("/logout", authController.logout);
 authRoute.post("/refresh-token", authController.refreshToken);
+authRoute.post("/initiate-reset", authController.initiatePasswordReset);
 
 export default authRoute;

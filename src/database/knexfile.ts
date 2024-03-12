@@ -1,4 +1,4 @@
-require('ts-node/register');
+// require('ts-node/register');
 import 'dotenv/config';
 import type { Knex } from 'knex';
 

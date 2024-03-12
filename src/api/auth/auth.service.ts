@@ -1,6 +1,6 @@
 import { AuthModel } from "./auth.model";
 import bcrypt from "bcrypt";
-import { generateAuthToken, verifyToken } from "../../modules/auth";
+import { generateAuthToken, passwordResetToken, verifyToken } from "../../modules/auth";
 import {
   NotFoundError,
   UnauthorizedError,
@@ -10,9 +10,9 @@ import { TokenPayload } from "../../utils/interfaces/token.interface";
 import { TokenModel } from "../../models/token.model";
 import { TokenEnum } from "../../utils/enum/token";
 import { env } from "../../config/env";
+import { MailHandler } from "../../modules/mail/mail.handler";
 
 export class AuthService {
-
   public static async register(
     email: string,
     password: string,
@@ -71,5 +71,22 @@ export class AuthService {
 
     const token = await generateAuthToken(user);
     return token;
+  }
+
+  public static async initiatePasswordReset(email: string): Promise<void> {
+    const user = await AuthModel.findByEmail(email);
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+    const token = await passwordResetToken(user);
+    const resetUrl = `${env.FRONTEND_URL}/reset-password?token=${token}`;
+    await MailHandler.sendTemplateMail(
+      {
+        to: email,
+        subject: "Password Reset Link",
+      },
+      "reset-password",
+      { resetUrl }
+    );
   }
 }

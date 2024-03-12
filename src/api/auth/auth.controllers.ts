@@ -47,4 +47,13 @@ export class AuthController {
         }
     }
 
+    public async initiatePasswordReset(req: Request, res: Response) {
+        try {
+            const email = req.body.email;
+            const token = await AuthService.initiatePasswordReset(email);
+            res.status(200).json({token});
+        } catch (error) {
+            res.status(400).json({error: error.message});
+        }
+    }
 }

@@ -25,5 +25,5 @@
     "rootDir": "./src"
   },
   "exclude": ["node_modules", "src/database/knexfile.ts"],
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "./src/**/*.html"]
 }

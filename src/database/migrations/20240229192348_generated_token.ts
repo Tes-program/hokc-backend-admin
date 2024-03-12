@@ -7,10 +7,11 @@ export async function up(knex: Knex): Promise<void> {
         table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
         table.uuid('user_id').references('id').inTable('users').onDelete('CASCADE');
         table.string('token').notNullable();
-        table.enum('type', ['REFRESH', 'PASSWORD_RESET, ACCESS']).notNullable();
+        table.enum('type', ['REFRESH', 'PASSWORD_RESET', 'ACCESS']).notNullable();
         table.boolean('is_revoked').defaultTo(false);
         table.timestamp('expires_at').notNullable();
     })
+
 
     await knex.raw(`
         CREATE OR REPLACE FUNCTION delete_expired_token()

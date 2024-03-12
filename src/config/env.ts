@@ -39,6 +39,12 @@ const envVarsSchema = joi.object({
     .required(),
   JWT_ACCESS_EXPIRATION_MINUTES: joi.string()
     .required(),
+  RESEND_API_KEY: joi.string()
+    .required(),
+  EMAIL_FROM: joi.string()
+    .required(),
+  FRONTEND_URL: joi.string()
+    .required()
 }).unknown()
   .required();
 
@@ -63,4 +69,7 @@ export const env = {
   SUPABASE_KEY: envVars.SUPBASE_KEY,
   JWT_REFRESH_EXPIRATION_DAYS: envVars.JWT_REFRESH_EXPIRATION_DAYS,
   JWT_ACCESS_EXPIRATION_MINUTES: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
+  RESEND_API_KEY: envVars.RESEND_API_KEY,
+  EMAIL_FROM: envVars.EMAIL_FROM,
+  FRONTEND_URL: envVars.FRONTEND_URL
 };

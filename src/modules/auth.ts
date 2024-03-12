@@ -77,3 +77,10 @@ export const generateAuthToken = async (user: IUser) => {
     },
   };
 };
+
+export const passwordResetToken = async (user: IUser) => {
+  const expires = moment().add(1, "hour").toDate();
+  const token = generateToken(user.id, expires, TokenEnum.PASSWORD_RESET);
+  await saveToken(user.id, token, expires, TokenEnum.PASSWORD_RESET);
+  return token;
+};
