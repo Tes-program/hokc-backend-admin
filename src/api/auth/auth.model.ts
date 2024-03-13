@@ -1,5 +1,6 @@
 import { IUser } from "../../utils/interfaces/user.interface";
 import { db } from "../../database/index";
+import { UnprocessableEntityError} from "../../shared/error";
 
 export class AuthModel{
   static tableName = "users";
@@ -7,16 +8,29 @@ export class AuthModel{
   public static db = () => db<IUser>(AuthModel.tableName);
 
   public static async create(data: Partial<IUser>): Promise<IUser> {
+    try {
     await AuthModel.db().insert(data).returning("id");
     return (data) as IUser;
+    }
+    catch (error) {
+      throw new UnprocessableEntityError('Error creating user');
+    }
   }
 
   public static async login(email: string, password: string): Promise<IUser | undefined> {
+    try {
     return AuthModel.db().where({ email, password }).first();
+    } catch (error) {
+      throw new UnprocessableEntityError('This data can not be processed due to an error in the database');
+    }
   }
 
   public static async findByEmail(email: string): Promise<IUser | undefined> {
+    try {
     return AuthModel.db().where({ email }).first();
+    } catch (error) {
+      throw new UnprocessableEntityError('This data can not be processed due to an error in the database');
+    }
   }
 
   public static async findById(id: string): Promise<IUser | undefined> {

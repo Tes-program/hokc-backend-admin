@@ -11,7 +11,7 @@ export class AuthController {
             const user = await AuthService.register(email, password, phone_number);
             res.status(201).json({user});
         } catch (error) {
-            res.status(error.httpCode).json({error: error.message});
+            res.status(error.httpCode || 500).json({error: error.message});
         }
     }
 
@@ -22,7 +22,7 @@ export class AuthController {
             const {token} = await AuthService.login(email, password);
             res.status(200).json({token});
         } catch (error) {
-            res.status(error.httpCode).json({error: error.message});
+            res.status(error.httpCode || 500).json({error: error.message});
         }
     }
 
@@ -32,7 +32,7 @@ export class AuthController {
             await AuthService.logout(refreshToken);
             res.status(200).json({message: "User logged out successfully"});
         } catch (error) {
-            res.status(error.httpCode).json({error: error.message});
+            res.status(error.httpCode || 500).json({error: error.message});
         }
     }
 
@@ -42,7 +42,7 @@ export class AuthController {
             const token = await AuthService.refreshToken(refreshToken);
             res.status(200).json({token});
         } catch (error) {
-            res.status(error.httpCode).json({error: error.message});
+            res.status(error.httpCode || 500).json({error: error.message});
         }
     }
 
@@ -52,7 +52,7 @@ export class AuthController {
             const token = await AuthService.initiatePasswordReset(email);
             res.status(200).json({token});
         } catch (error) {
-            res.status(error.httpCode).json({error: error.message});
+            res.status(error.httpCode || 500).json({error: error.message});
         }
     }
 }

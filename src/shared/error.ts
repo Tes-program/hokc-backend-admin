@@ -71,4 +71,14 @@ export class MailError extends APIError {
     }
 }
 
+export class UnavaliabeError extends APIError {
+    constructor(description: string) {
+        super('UnavaliabeError', HttpStatusCode.SERVICE_UNAVAILABLE, description, true);
+    }
+}
 
+export class UnprocessableEntityError extends APIError {
+    constructor(description: string) {
+        super('UnprocessableEntityError', HttpStatusCode.UNPROCESSABLE_ENTITY, description, true);
+    }
+}

@@ -8,11 +8,13 @@ import { MailError } from '../../shared/error';
 
 const resend = new Resend(env.RESEND_API_KEY);
 
+const dirName = process.cwd();
+
 export class MailHandler {
   private static readonly logger = new Logger();
 
   private static getTemplateContent(templateName: string): string {
-    const templatePath = path.resolve(__dirname, `./templates/${templateName}.html`);
+    const templatePath = path.resolve(dirName, `./src/template/${templateName}.html`);
     return fs.readFileSync(templatePath, 'utf8');
   }
 
@@ -27,6 +29,7 @@ private static compileTemplate(template: string, data: Record<string, string | n
     try {
       const templateContent = MailHandler.getTemplateContent(templateName);
       const compiledTemplate = MailHandler.compileTemplate(templateContent, data);
+
 
       await resend.emails.send({
         from: env.EMAIL_FROM,
