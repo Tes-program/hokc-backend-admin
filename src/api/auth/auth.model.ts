@@ -9,8 +9,7 @@ export class AuthModel{
 
   public static async create(data: Partial<IUser>): Promise<IUser> {
     try {
-    await AuthModel.db().insert(data).returning("id");
-    return (data) as IUser;
+     return await AuthModel.db().insert(data).returning("id");
     }
     catch (error) {
       throw new UnprocessableEntityError('Error creating user');
@@ -39,5 +38,10 @@ export class AuthModel{
 
   public static async paginateUsers(page: number, limit: number): Promise<IUser[]> {
     return AuthModel.db().limit(limit).offset((page - 1) * limit);
+  }
+
+  public static async updateUser(id: string, data: Partial<IUser>): Promise<IUser> {
+    await AuthModel.db().where({ id }).update(data);
+    return data as IUser;
   }
 }

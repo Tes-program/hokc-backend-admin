@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string('password').notNullable();
         table.string('phone_number').notNullable().unique();
         table.enum('role', ['admin', 'user']).defaultTo('user');
+        table.boolean('is_verified').defaultTo(false);
     })    
 
     await knex.schema.raw(`

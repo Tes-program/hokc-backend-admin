@@ -42,8 +42,6 @@ export class TokenModel{
     const tokenValues = data.map(token => token.token);
     const typeValues = data.map(token => token.type);
     const isRevokedValues = data.map(token => token.is_revoked);
-
-    console.log(tokenValues, typeValues, isRevokedValues);
   
     return await TokenModel.db()
       .whereIn('token', tokenValues)

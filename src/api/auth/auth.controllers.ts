@@ -8,8 +8,18 @@ export class AuthController {
     public async create(req: Request, res: Response) {
         try {
             const {email, password, phone_number} = req.body;
-            const user = await AuthService.register(email, password, phone_number);
-            res.status(201).json({user});
+            await AuthService.register(email, password, phone_number);
+            res.status(201).json({message: "Check your email to verify your account"});
+        } catch (error) {
+            res.status(error.httpCode || 500).json({error: error.message});
+        }
+    }
+
+    public async verifyEmail(req: Request, res: Response) {
+        try {
+            const {otp, email} = req.body;
+            await AuthService.verifyEmail(otp, email);
+            res.status(200).json({message: "Email verified successfully"});
         } catch (error) {
             res.status(error.httpCode || 500).json({error: error.message});
         }
@@ -50,7 +60,17 @@ export class AuthController {
         try {
             const email = req.body.email;
             const token = await AuthService.initiatePasswordReset(email);
-            res.status(200).json({token});
+            res.status(200).json({message: "Mail sent successfully", token});
+        } catch (error) {
+            res.status(error.httpCode || 500).json({error: error.message});
+        }
+    }
+
+    public async resetPassword(req: Request, res: Response) {
+        try {
+            const {token, password} = req.body;
+            await AuthService.resetPassword(password, token);
+            res.status(200).json({message: "Password reset successfully"});
         } catch (error) {
             res.status(error.httpCode || 500).json({error: error.message});
         }

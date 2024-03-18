@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import randomstring from "randomstring";
+import { OTPModel } from "../models/otp.model";
 import moment from "moment";
 import { TokenModel } from "../models/token.model";
 import { TokenEnum } from "../utils/enum/token";
@@ -84,3 +86,22 @@ export const passwordResetToken = async (user: IUser) => {
   await saveToken(user.id, token, expires, TokenEnum.PASSWORD_RESET);
   return token;
 };
+
+export const generateOTP = async (userId: string)=> {
+  try {
+  const otp = randomstring.generate({
+    length: 6,
+    charset: "numeric",
+  });
+  const expires = moment().add(2, "minutes").toDate();
+  await OTPModel.create({
+    user_id: userId,
+    otp,
+    expires_at: expires,
+    is_used: false,
+  });
+  return otp;
+} catch (error) {
+  throw new Error("Error generating OTP");
+}
+}

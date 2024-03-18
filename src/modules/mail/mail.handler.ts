@@ -32,11 +32,12 @@ private static compileTemplate(template: string, data: Record<string, string | n
 
 
       await resend.emails.send({
-        from: env.EMAIL_FROM,
+        from: `Heirs of the Kingdom Chapel <${env.EMAIL_FROM}>`,
         to: mail.to,
         subject: mail.subject,
         html: compiledTemplate,
       });
+      MailHandler.logger.info(`Mail sent to ${mail.to}`);
     } catch (error) {
       MailHandler.logger.error(`Failed to send mail: ${error}`);
       throw new MailError(error)
