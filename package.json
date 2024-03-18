@@ -43,6 +43,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.19",
+    "@types/randomstring": "^1.1.12",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.56.0",

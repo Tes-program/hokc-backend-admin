@@ -11,4 +11,4 @@ export enum HttpStatusCode {
     RESOURCE_EXHAUSTED = 429,
     SERVICE_UNAVAILABLE = 503,
     UNPROCESSABLE_ENTITY = 422,
-    }
+}
