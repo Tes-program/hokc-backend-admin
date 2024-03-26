@@ -7,8 +7,8 @@ export class AuthController {
    
     public async create(req: Request, res: Response) {
         try {
-            const {email, password, phone_number} = req.body;
-            await AuthService.register(email, password, phone_number);
+            const {email, password} = req.body;
+            await AuthService.register(email, password);
             res.status(201).json({message: "Check your email to verify your account"});
         } catch (error) {
             res.status(error.httpCode || 500).json({error: error.message});
@@ -24,7 +24,6 @@ export class AuthController {
             res.status(error.httpCode || 500).json({error: error.message});
         }
     }
-
 
     public async login(req: Request, res: Response) {
         try {
@@ -46,6 +45,26 @@ export class AuthController {
         }
     }
 
+    public async googleSignUp(req: Request, res: Response) {
+        try {
+            const {email} = req.body;
+            const token = await AuthService.googleSignUp(email);
+            res.status(200).json({token});
+        } catch (error) {
+            res.status(error.httpCode || 500).json({error: error.message});
+        }
+    }
+
+    public async googleSignIn(req: Request, res: Response) {
+        try {
+            const {email} = req.body;
+            const token = await AuthService.googleSignIn(email);
+            res.status(200).json({token});
+        } catch (error) {
+            res.status(error.httpCode || 500).json({error: error.message});
+        }
+    }
+
     public async refreshToken(req: Request, res: Response) {
         try {
             const refreshToken = req.body.refreshToken;
@@ -53,6 +72,16 @@ export class AuthController {
             res.status(200).json({token});
         } catch (error) {
             res.status(error.httpCode || 500).json({error: error.message});
+        }
+    }
+
+    public async verifyToken(req: Request, res: Response) {
+        try {
+            const {accessToken, refreshToken} = req.body;
+            const decoded = await AuthService.verifyToken(accessToken, refreshToken);
+            res.status(200).json(decoded);
+        } catch (error) {
+            res.status(error.httpCode || 500).json(false);
         }
     }
 

@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
         table.uuid('user_id').references('id').inTable('users').onDelete('CASCADE');
         table.string('first_name').notNullable();
         table.string('last_name').notNullable();
+        table.string('phone_number').notNullable();
         table.string('matric_number', 7).notNullable().unique();
         table.string('hall_of_residence').notNullable();
         table.enum('gender', ['male', 'female', 'others']).defaultTo('others');

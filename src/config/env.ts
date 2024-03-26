@@ -44,6 +44,8 @@ const envVarsSchema = joi.object({
   EMAIL_FROM: joi.string()
     .required(),
   FRONTEND_URL: joi.string()
+    .required(),
+  REDIS_URL: joi.string()
     .required()
 }).unknown()
   .required();
@@ -71,5 +73,6 @@ export const env = {
   JWT_ACCESS_EXPIRATION_MINUTES: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
   RESEND_API_KEY: envVars.RESEND_API_KEY,
   EMAIL_FROM: envVars.EMAIL_FROM,
-  FRONTEND_URL: envVars.FRONTEND_URL
+  FRONTEND_URL: envVars.FRONTEND_URL,
+  REDIS_URL: envVars.REDIS_URL
 };

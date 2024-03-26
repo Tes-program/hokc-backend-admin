@@ -3,7 +3,6 @@ import Joi from "joi";
 export const createUserSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
-  phone_number: Joi.string().required(),
 });
 
 export const verifyEmailSchema = Joi.object({
@@ -14,6 +13,19 @@ export const verifyEmailSchema = Joi.object({
 export const loginUserSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
+});
+
+export const googleSignUpSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+export const googleSignInSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+export const verifyTokenSchema = Joi.object({
+  accessToken: Joi.string().required(),
+  refreshToken: Joi.string().required(),
 });
 
 export const resetPasswordSchema = Joi.object({

@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import randomstring from "randomstring";
-import { OTPModel } from "../models/otp.model";
 import moment from "moment";
 import { TokenModel } from "../models/token.model";
 import { TokenEnum } from "../utils/enum/token";
 import { env } from "../config/env";
+import { redisClient } from "../server";
 import { NotFoundError } from "../shared/error";
 import { IUser } from "../utils/interfaces/user.interface";
 
@@ -89,19 +89,13 @@ export const passwordResetToken = async (user: IUser) => {
 
 export const generateOTP = async (userId: string)=> {
   try {
-  const otp = randomstring.generate({
-    length: 6,
-    charset: "numeric",
-  });
-  const expires = moment().add(2, "minutes").toDate();
-  await OTPModel.create({
-    user_id: userId,
-    otp,
-    expires_at: expires,
-    is_used: false,
-  });
-  return otp;
-} catch (error) {
+    const otp = randomstring.generate({
+      length: 6,
+      charset: "numeric",
+    });
+    await redisClient.set(`otp:${userId}`, otp, { EX: 120 });
+    return otp;
+  } catch (error) {
   throw new Error("Error generating OTP");
 }
 }

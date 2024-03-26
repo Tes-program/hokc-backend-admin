@@ -5,19 +5,20 @@ import {
   NotFoundError,
   UnauthorizedError,
   ForbiddenError,
+  ConflictError,
 } from "../../shared/error";
+import jwt from "jsonwebtoken";
 import { TokenPayload } from "../../utils/interfaces/token.interface";
 import { TokenModel } from "../../models/token.model";
+import { redisClient } from "../../server";
 import { TokenEnum } from "../../utils/enum/token";
 import { env } from "../../config/env";
 import { MailHandler } from "../../modules/mail/mail.handler";
-import { OTPModel } from "../../models/otp.model";
 
 export class AuthService {
   public static async register(
     email: string,
     password: string,
-    phone_number: string
   ): Promise<{message: string}> {
     const existingUser = await AuthModel.findByEmail(email);
     if (existingUser) {
@@ -28,7 +29,6 @@ export class AuthService {
     const user = await AuthModel.create({
       email,
       password: hashedPassword,
-      phone_number,
     });
     const otp = await generateOTP(user[0].id);
     const otpCode = otp;
@@ -51,14 +51,15 @@ export class AuthService {
       throw new NotFoundError("User not found");
     }
 
-    const otpData =  await OTPModel.findByOTP(otp, user.id, false);
-    if (!otpData) {
+    const otpData = await redisClient.get(`otp:${user.id}`);
+
+    if (!otpData || otpData !== otp) {
       throw new NotFoundError("Invalid OTP or OTP has expired");
     }
 
     await AuthModel.updateUser(user.id, { is_verified: true });
 
-    await OTPModel.revokeOTP(otp);
+    await redisClient.del(`otp:${user.id}`);
   }
 
 
@@ -84,6 +85,37 @@ export class AuthService {
     return { token };
   }
 
+  public static async googleSignUp (email: string): Promise<{ token: TokenPayload }> {
+    const user = await AuthModel.findByEmail(email);
+    if (user) {
+      throw new ConflictError("User already exists")
+    }
+
+    const newUser = await AuthModel.create({
+      email,
+      google_oauth: true,
+      is_verified: true
+    });
+    
+    const token = await generateAuthToken(newUser[0]);
+    return { token };
+  }
+
+  public static async googleSignIn (email: string): Promise<{ token: TokenPayload }> {
+    const user = await AuthModel.findByEmail(email);
+    if (!user) {
+      throw new NotFoundError("User not found")
+    }
+
+    if (!user.google_oauth) {
+      throw new UnauthorizedError("You are not authorized to login with google, sign up instead")
+    }
+
+    const token = await generateAuthToken(user);
+    return { token };
+  }
+
+
   public static async logout(refreshToken: string): Promise<void> {
     const token = await TokenModel.findToken(refreshToken, TokenEnum.REFRESH, false);
     if (!token) {
@@ -105,6 +137,25 @@ export class AuthService {
 
     const token = await generateAuthToken(user);
     return token;
+  }
+
+  public static async verifyToken(accessToken: string, refreshToken: string): Promise<boolean> {
+    const secret: string = env.JWT_SECRET;
+    const payload = jwt.verify(accessToken, secret);
+    const userId = payload.sub as string;
+
+    const user = await AuthModel.findById(userId);
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    const token = await TokenModel.findByToken(userId ,refreshToken, TokenEnum.REFRESH, false);
+    if (!token) {
+      throw new NotFoundError("Token not found");
+    }
+
+    return true;
   }
 
   public static async initiatePasswordReset(email: string): Promise<void> {

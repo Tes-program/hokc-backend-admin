@@ -7,7 +7,10 @@ import {
   resetPasswordSchema,
   refreshTokenSchema,
   logoutSchema,
-  verifyEmailSchema
+  verifyEmailSchema,
+  googleSignInSchema,
+  googleSignUpSchema,
+  verifyTokenSchema,
 } from "./validation/auth.validators";
 import { validateBody } from "../../modules/validate";
 
@@ -26,6 +29,14 @@ authRoute.post(
 );
 authRoute.post("/login", validateBody(loginUserSchema), authController.login);
 authRoute.post("/logout", validateBody(logoutSchema), authController.logout);
+authRoute.post("/google-signup", validateBody(googleSignUpSchema), authController.googleSignUp);
+authRoute.post("/google-signin", validateBody(googleSignInSchema), authController.googleSignIn);
+authRoute.post(
+  "/verify-token",
+  validateBody(verifyTokenSchema),
+  authController.verifyToken
+);
+
 authRoute.post(
   "/refresh-token",
   validateBody(refreshTokenSchema),
